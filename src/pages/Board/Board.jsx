@@ -1,4 +1,18 @@
+import { useState } from 'react';
 const PageBoard = () => {
+    const [openCount, setOpenCount] = useState("24");
+    const [inProgress, setInProgress] = useState("9");
+    const [doneSprint, setDoneSprint] = useState("61");
+    const [velocity, setVelocity] = useState("7.4");
+    const [inputField, setInputField] = useState("");
+    const [tasks, setTasks] = useState([]);
+    const addTask = () => {  
+        const newTask = {
+        "title": inputField,
+        "checked": false,
+        "value": 0}
+        setTasks(o => [...o, newTask])
+    }
     return (
         <section className="page active" id="page-board">
             <div className="page-header">
@@ -11,19 +25,19 @@ const PageBoard = () => {
                 data-hook="3.1 useState + useEffect (fetch on mount)">
                 <div className="mount-point stats-row" id="mount-stats">
                     <div className="stat-card">
-                        <div className="stat-value">24</div>
+                        <div className="stat-value">{openCount}</div>
                         <div className="stat-label">Open</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">9</div>
+                        <div className="stat-value">{inProgress}</div>
                         <div className="stat-label">In progress</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">61</div>
+                        <div className="stat-value">{doneSprint}</div>
                         <div className="stat-label">Done this sprint</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">7.4</div>
+                        <div className="stat-value">{velocity}</div>
                         <div className="stat-label">Velocity</div>
                     </div>
                 </div>
@@ -48,49 +62,26 @@ const PageBoard = () => {
                         <input
                             className="input grow"
                             placeholder="Add a task and press Enter..."
+                            onChange={e => setInputField(e.target.value)}
                         />
-                        <button className="btn">Add</button>
+                        <button className="btn" onClick={addTask}>Add</button>
                     </div>
                     <div className="task-list">
+                    {tasks.map((task)=>(
                         <div className="task-row">
-                            <button className="task-check"></button>
+                            <button className={"task-check " + (task.checked ? "checked" : "")}></button>
                             <span className="task-title">
-                                Migrate onboarding flow to new design
+                                {task.title}
                             </span>
                             <div className="estimate-stepper">
                                 <button className="stepper-btn">−</button>
-                                <span className="stepper-value">3</span>
+                                <span className="stepper-value">{task.value}</span>
                                 <button className="stepper-btn">+</button>
                             </div>
-                            <button className="quick-bump">+2</button>
+                            <button className="quick-bump">+{task.value}</button>
                             <button className="icon-danger">✕</button>
                         </div>
-                        <div className="task-row">
-                            <button className="task-check checked">✓</button>
-                            <span className="task-title done">
-                                Write API docs for /webhooks
-                            </span>
-                            <div className="estimate-stepper">
-                                <button className="stepper-btn">−</button>
-                                <span className="stepper-value">5</span>
-                                <button className="stepper-btn">+</button>
-                            </div>
-                            <button className="quick-bump">+2</button>
-                            <button className="icon-danger">✕</button>
-                        </div>
-                        <div className="task-row">
-                            <button className="task-check"></button>
-                            <span className="task-title">
-                                Fix flaky retry test in queue worker
-                            </span>
-                            <div className="estimate-stepper">
-                                <button className="stepper-btn">−</button>
-                                <span className="stepper-value">2</span>
-                                <button className="stepper-btn">+</button>
-                            </div>
-                            <button className="quick-bump">+2</button>
-                            <button className="icon-danger">✕</button>
-                        </div>
+                    ))}
                     </div>
                 </div>
             </div>

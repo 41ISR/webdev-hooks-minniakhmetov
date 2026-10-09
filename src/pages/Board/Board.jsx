@@ -1,18 +1,26 @@
 import { useState } from 'react';
 const PageBoard = () => {
-    const [openCount, setOpenCount] = useState("24");
-    const [inProgress, setInProgress] = useState("9");
-    const [doneSprint, setDoneSprint] = useState("61");
-    const [velocity, setVelocity] = useState("7.4");
-    const [inputField, setInputField] = useState("");
+    
     const [tasks, setTasks] = useState([]);
     const addTask = () => {  
+        let uuid = self.crypto.randomUUID();
         const newTask = {
+        "id": uuid,
         "title": inputField,
         "checked": false,
         "value": 0}
-        setTasks(o => [...o, newTask])
+        setTasks(t => [...t, newTask])
+
     }
+    const taskCheck = (id) => {
+        setTasks(
+            (t)=>t.map(
+                e=>(e.id === id ? {...e,"checked" : !e.checked} : e))
+        )
+    }
+    const [inputField, setInputField] = useState("");
+    
+
     return (
         <section className="page active" id="page-board">
             <div className="page-header">
@@ -25,19 +33,19 @@ const PageBoard = () => {
                 data-hook="3.1 useState + useEffect (fetch on mount)">
                 <div className="mount-point stats-row" id="mount-stats">
                     <div className="stat-card">
-                        <div className="stat-value">{openCount}</div>
+                        <div className="stat-value">{tasks.length}</div>
                         <div className="stat-label">Open</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">{inProgress}</div>
+                        <div className="stat-value">{""}</div>
                         <div className="stat-label">In progress</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">{doneSprint}</div>
+                        <div className="stat-value">{tasks.filter(e=>e.checked).length}</div>
                         <div className="stat-label">Done this sprint</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">{velocity}</div>
+                        <div className="stat-value">{""}</div>
                         <div className="stat-label">Velocity</div>
                     </div>
                 </div>
@@ -68,8 +76,10 @@ const PageBoard = () => {
                     </div>
                     <div className="task-list">
                     {tasks.map((task)=>(
-                        <div className="task-row">
-                            <button className={"task-check " + (task.checked ? "checked" : "")}></button>
+                        <div className="task-row" id={`task-id_${task.id}`}>
+                            <button className={"task-check " + (task.checked ? "checked" : "")}
+                            onClick={()=>taskCheck(task.id)}
+                            ></button>
                             <span className="task-title">
                                 {task.title}
                             </span>
